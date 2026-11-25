@@ -19,13 +19,19 @@ EXCUSE = (
 )
 
 
-def main() -> None:
-    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
-    os.makedirs(out_dir, exist_ok=True)
-    text = EXCUSE.strip()
+def validate(text: str) -> str:
+    """One line, 1-140 chars, at most 20 words, no newline."""
+    text = text.strip()
     assert 1 <= len(text) <= 140, f"entry is {len(text)} chars"
     assert len(text.split()) <= 20, f"entry is {len(text.split())} words"
     assert "\n" not in text, "entry must be a single line"
+    return text
+
+
+def main() -> None:
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(out_dir, exist_ok=True)
+    text = validate(EXCUSE)
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as fh:
         fh.write(text + "\n")
 
